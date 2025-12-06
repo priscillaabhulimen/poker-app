@@ -4,6 +4,8 @@
   export default {
     name: "Basic",
 
+    params: {},
+
     components: {
       Card,
     }

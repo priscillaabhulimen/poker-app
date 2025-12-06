@@ -35,7 +35,7 @@ export default {
     }
   },
 
-  emits: ["card-flipped"],
+  emits: ["card-flipped", "card-unflipped"],
 
   data() {
     return {

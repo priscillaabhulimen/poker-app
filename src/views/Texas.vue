@@ -2,7 +2,7 @@
 import Card from "../components/Card.vue"
 
 export default {
-    name: "Texas Hold'em",
+    name: "Texas HoldEm",
 
     components: {
         Card,
