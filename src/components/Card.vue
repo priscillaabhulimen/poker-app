@@ -1,26 +1,12 @@
 <template>
-  <div
-    class="card-container"
-    :class="{ flipped: isFlipped, empty: !this.img}"
-    @click="handleClick"
-  >
-    <div v-if="this.img" class="card">
-      <img
-        class="card-face card-front"
-        :src="img"
-        alt="Card front"
-      />
+  <div class="card-container shrink-2 w-[80px] lg:w-[200px] lg:min-w-[100px]" :class="{ flipped: isFlipped, empty: !this.img }"
+    @click="handleClick">
+    <div v-if="img" class="card">
+      <img class="card-face card-front" :src="img" alt="Card front" />
 
-      <img
-        class="card-face card-back"
-        :src="backImg"
-        alt="Card back"
-      />
+      <img class="card-face card-back" :src="backImg" alt="Card back" />
     </div>
-
-    
-      <p>?</p>
-    
+    <p v-else>?</p>
   </div>
 </template>
 
@@ -62,9 +48,9 @@ export default {
 
 <style scoped>
 .card-container {
-  width: 120px;
-  height: 180px;
-  perspective: 300px;
+  width: 200px;
+  height: 300px;
+  perspective: 450px;
   cursor: pointer;
 }
 
@@ -73,15 +59,13 @@ export default {
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.03)
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.08),
+      rgba(255, 255, 255, 0.03));
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 
-  border-radius: 20px;
+  border-radius: 10px;
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.45),
@@ -89,10 +73,9 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.empty > p{
+.empty>p {
   font-size: 2em;
   font-weight: 700;
-  color: white;
 }
 
 .card {
@@ -100,7 +83,7 @@ export default {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 1.8s ease;
+  transition: transform 1.3s ease;
 }
 
 .card-container.flipped .card {

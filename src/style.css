@@ -1,16 +1,16 @@
-body{
-    background-color: #00000e;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.table-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 3rem 1rem;
+body{
+  background-color: #00000e;
+  color: white;
 }
 
 .glass-table {
   margin: auto;
   display: inline-flex;
+  flex-flow: row wrap;
   gap: 1rem;
   padding: 1.5rem 2rem;
 
@@ -25,7 +25,7 @@ body{
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 
-  border-radius: 20px;
+  border-radius: 12px;
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.45),
