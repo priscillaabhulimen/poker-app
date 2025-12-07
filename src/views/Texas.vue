@@ -20,30 +20,52 @@ export default {
     computed: {
         displayedPrivateCards() {
             if (this.cards.length == 0) {
-                return Array.from({ length: 2 }, (_, i) => createEmptyCard(i))
+                return Array.from({ length: 2 }, (_, i) => {
+                    let emptyCard = createEmptyCard(i);
+
+                    return {
+                        ...emptyCard,
+                        size: 'md'
+                    }
+                })
             }
 
             return this.cards.map(card => ({
                 ...card,
-                isPlaceholder: false
+                isPlaceholder: false,
+                size: 'md'
             }))
 
         },
 
         displayedCommunityCards() {
-            if (this.communityCards.length == 0) {
-                return Array.from({ length: 2 }, (_, i) => createEmptyCard(i))
-            }
+            let empty = Array.from({ length: 5 - this.communityCards.length }, (_, i) => {
+                let emptyCard = createEmptyCard(i);
 
-            return this.communityCards.map(card => ({
+                return {
+                    ...emptyCard,
+                    size: 'sm'
+                }
+            })
+
+            const nonEmpty = this.communityCards.map(card => ({
                 ...card,
-                isPlaceholder: false
-            }))
+                isPlaceholder: false,
+                size: 'sm'
+            }));
+
+            return [
+                ...nonEmpty,
+                ...empty
+            ]
 
         },
 
         currentHand() {
-            let hand = evaluatePokerHand(this.displayedCards).hand;
+            let hand = evaluatePokerHand([
+                ...this.displayedPrivateCards,
+                ...this.displayedCommunityCards,
+            ]).hand;
 
             if (hand) {
                 return hand;
@@ -53,7 +75,15 @@ export default {
         },
 
         buttonText() {
-            return "Get cards"
+            if (this.cards.length === 0 || this.communityCards.length === 5) {
+                return "Deal cards";
+            } else if (this.communityCards.length === 0) {
+                return "Deal flop";
+            } else if (this.communityCards.length === 3) {
+                return "Deal turn";
+            } else {
+                return "Deal river";
+            }
         }
     },
     methods: {
@@ -62,6 +92,7 @@ export default {
                 this.loading = true;
                 this.deckId = '';
                 this.cards = [];
+                this.communityCards = [];
                 const deckRes = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/");
                 const deck = await deckRes.json();
 
@@ -84,11 +115,20 @@ export default {
             }
         },
 
-        async revealCardsSequentially(cards) {
+        async revealCardsSequentially(cards, startingIndex = 0, isCommunity = false) {
             await new Promise(resolve => setTimeout(resolve, 70));
-            for (let i = 0; i < cards.length; i++) {
-                this.cards[i].isFlipped = false;
-                await new Promise(resolve => setTimeout(resolve, 200)); // 200ms delay
+
+            console.log(startingIndex);
+            console.log(isCommunity);
+
+            for (let i = startingIndex; i < cards.length; i++) {
+                if (!isCommunity) {
+                    this.cards[i].isFlipped = false;
+                } else {
+                    this.communityCards[i].isFlipped = false;
+                    console.log(this.communityCards[i]);
+                }
+                await new Promise(resolve => setTimeout(resolve, 200));
             }
         },
 
@@ -108,22 +148,49 @@ export default {
             }
         },
 
+        async getCommunityCards(count) {
+            let c = await this.getNewCard(count);
+
+            let startingIndex = this.communityCards.filter((e) => e.image !== null).length;
+
+            if (c) {
+                c = c.map(e => ({
+                    ...e,
+                    isFlipped: true,
+                    size: 'sm'
+                }));
+
+                this.communityCards.push(...c); // append instead of replacing
+                await this.revealCardsSequentially(this.communityCards, startingIndex, true);
+            }
+        },
+
         handleButtonClick() {
-            this.getNewDeck();
+            if (this.communityCards.length < 5 && this.cards.length > 0) {
+                this.getCommunityCards(this.communityCards.length >= 3 ? 1 : 3)
+            } else {
+                this.getNewDeck();
+            }
         }
     },
 }
 </script>
 
 <template>
-    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-8">
-        <p v-if="currentHand !== ''" class="pb-6 align-middle">
+    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-4">
+        <p class="pb-3 align-middle" :class="{invisible: currentHand === ''}">
             Highest hand:
             <span class="text-2xl italic">{{ currentHand }}</span>
         </p>
         <div class="glass-table lg:flex-nowrap ">
+            <Card v-for="card in displayedCommunityCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
+                :size="card.size" :canFlip="false" />
+
+        </div>
+        <div class="spacer h-4"></div>
+        <div class="glass-table mt-10 lg:flex-nowrap ">
             <Card v-for="card in displayedPrivateCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
-                :size="md" :canFlip="false" />
+                :size="card.size" :canFlip="false" />
 
         </div>
     </div>

@@ -161,7 +161,7 @@ export default {
 <template>
   <section>
     <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] pt-8 pb-2">
-      <p v-if="currentHand !== ''" class="pb-6">
+      <p :class="{ invisible: currentHand === '' }" class="pb-6">
         Highest hand:
         <span class="text-2xl italic">{{ currentHand }}</span>
       </p>
@@ -171,8 +171,13 @@ export default {
 
       </div>
 
-      <p v-if="cards.length > 0" class="m-auto pt-8"> You have <span class="text-2xl">{{ replacementsLeft }}</span> redraws left</p>
-        <div v-else class="pb-8"></div>
+      <p :class="{ invisible: cards.length <= 0 }" class="m-auto pt-8"> You have <span class="text-2xl">{{ replacementsLeft
+          }}</span> redraws left</p>
+
+      <p :class="{ invisible: cards.length <= 0 || replacementsLeft <= 0 }" class="m-auto pt-2 pb-4 text-sm">Click on the
+        cards to select and replace them</p>
+
+
     </div>
 
     <p class="btn-glass" :class="{ disabled: buttonDisabled }" @click="handleButtonClick()">

@@ -1,6 +1,8 @@
 <template>
-  <div class="shrink-2" :class="{ flipped: isFlipped, empty: !this.img, small: size === 'sm', large: size === 'lg', medium: size === 'md' }"
-    @click="handleClick">
+  <div class="shrink-2 card-container" :class="[
+    `size-${size}`,
+    { flipped: isFlipped, empty: !img }
+  ]" @click="handleClick">
     <div v-if="img" class="card">
       <img class="card-face card-front" :src="img" alt="Card front" />
 
@@ -29,7 +31,8 @@ export default {
     },
     size: {
       type: String,
-      default: 'lg'
+      default: 'lg',
+      validator: v => ['sm', 'md', 'lg'].includes(v)
     }
   },
 
@@ -51,48 +54,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.large {
-  width: 16vw;
-  height: 24vw;
-  min-width: 70px;
-  min-height: 105px;
+.card-container {
   perspective: 450px;
   cursor: pointer;
 
-  &.flipped{
-    .card{
+  &.flipped {
+    .card {
       transform: rotateY(180deg);
     }
   }
-}
 
-.medium {
-  width: 10vw;
-  height: 15vw;
-  min-width: 70px;
-  min-height: 105px;
-  perspective: 450px;
-  cursor: pointer;
-
-  &.flipped{
-    .card{
-      transform: rotateY(180deg);
-    }
+  &.size-sm,
+  &.size-md,
+  &.size-lg {
+    min-width: 70px;
+    min-height: 105px;
   }
-}
 
-.small {
-  width: 8vw;
-  height: 12vw;
-  min-width: 70px;
-  min-height: 105px;
-  perspective: 450px;
-  cursor: pointer;
+  &.size-lg {
+    width: 14vw;
+    height: 21vw;
+  }
 
-  &.flipped{
-    .card{
-      transform: rotateY(180deg);
-    }
+  &.size-md {
+    width: 10vw;
+    height: 15vw;
+  }
+
+  &.size-sm {
+    width: 8vw;
+    height: 12vw;
   }
 }
 
@@ -101,14 +92,15 @@ export default {
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.03));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 
   border-radius: 10px;
-
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -143,4 +135,5 @@ export default {
 .card-back {
   transform: rotateY(180deg);
 }
+
 </style>

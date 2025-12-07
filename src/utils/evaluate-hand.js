@@ -1,4 +1,4 @@
-// SOURCED FROM THE INTERNET - REFACTORED WITH AI
+// SOURCED FROM THE INTERNET - REFACTORED AND IMPROVED FOR BEST 5-CARD HAND
 const VALUE_MAP = {
   ACE: 14,
   KING: 13,
@@ -31,40 +31,44 @@ const VALUE_NAME = {
   2: "Two",
 };
 
-export function evaluatePokerHand(cards = []) {
-  const validCards = cards.filter((c) => !c.isPlaceholder && c.value && c.suit);
+const HAND_RANKS = [
+  "High Card",
+  "One Pair",
+  "Two Pair",
+  "Three of a Kind",
+  "Straight",
+  "Flush",
+  "Full House",
+  "Four of a Kind",
+  "Straight Flush",
+  "Royal Flush",
+];
 
-  if (validCards.length === 0) {
-    return {
-      status: "no_cards",
-      hand: null,
-      reason: "All cards are placeholders or no valid cards provided",
-    };
-  }
+function getCombinations(arr, n) {
+  const result = [];
+  const combine = (start, combo) => {
+    if (combo.length === n) {
+      result.push(combo);
+      return;
+    }
+    for (let i = start; i < arr.length; i++) {
+      combine(i + 1, [...combo, arr[i]]);
+    }
+  };
+  combine(0, []);
+  return result;
+}
 
-  if (validCards.length < 5) {
-    return {
-      status: "incomplete",
-      hand: null,
-      reason: `Only ${validCards.length} valid card(s) provided; need 5 for a full evaluation.`,
-      validCount: validCards.length,
-    };
-  }
-
-  const handCards = validCards.slice(0, 5);
-
-  const values = handCards.map((c) => VALUE_MAP[c.value]).sort((a, b) => b - a);
-  const suits = handCards.map((c) => c.suit);
+function evaluateFiveCardHand(cards) {
+  const values = cards.map(c => VALUE_MAP[c.value]).sort((a, b) => b - a);
+  const suits = cards.map(c => c.suit);
 
   const valueCounts = {};
-  values.forEach((v) => (valueCounts[v] = (valueCounts[v] || 0) + 1));
+  values.forEach(v => (valueCounts[v] = (valueCounts[v] || 0) + 1));
   const counts = Object.values(valueCounts).sort((a, b) => b - a);
 
   const isFlush = new Set(suits).size === 1;
-
-  const isConsecutive = (arr) =>
-    arr.every((v, i) => i === 0 || arr[i - 1] === v + 1);
-
+  const isConsecutive = arr => arr.every((v, i) => i === 0 || arr[i - 1] === v + 1);
   const isWheel = JSON.stringify(values) === JSON.stringify([14, 5, 4, 3, 2]);
   const isStraight = isConsecutive(values) || isWheel;
 
@@ -95,9 +99,47 @@ export function evaluatePokerHand(cards = []) {
     handName = `High ${VALUE_NAME[highest]}`;
   }
 
+  return { handName, handRank: HAND_RANKS.indexOf(handName) };
+}
+
+export function evaluatePokerHand(cards = []) {
+  const validCards = cards.filter(c => !c.isPlaceholder && c.value && c.suit);
+
+  if (validCards.length === 0) {
+    return {
+      status: "no_cards",
+      hand: null,
+      reason: "All cards are placeholders or no valid cards provided",
+    };
+  }
+
+  if (validCards.length < 5) {
+    return {
+      status: "incomplete",
+      hand: null,
+      reason: `Only ${validCards.length} valid card(s) provided; need 5 for a full evaluation.`,
+      validCount: validCards.length,
+    };
+  }
+
+  const combos = getCombinations(validCards, 5);
+
+  let bestHand = combos[0];
+  let bestRank = -1;
+
+  combos.forEach(combo => {
+    const { handRank } = evaluateFiveCardHand(combo);
+    if (handRank > bestRank) {
+      bestRank = handRank;
+      bestHand = combo;
+    }
+  });
+
+  const { handName } = evaluateFiveCardHand(bestHand);
+
   return {
     status: "ok",
     hand: handName,
-    cardsUsed: handCards,
+    cardsUsed: bestHand,
   };
 }
