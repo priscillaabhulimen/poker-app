@@ -3,8 +3,23 @@
 @tailwind utilities;
 
 body{
-  background-color: #00000e;
   color: white;
+  font-family: "Space Grotesk", sans-serif;
+
+  background-image: url("/background.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 10, 0.65);
+  z-index: -1;
 }
 
 .glass-table {

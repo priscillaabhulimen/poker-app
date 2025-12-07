@@ -106,16 +106,17 @@ export default {
 <template>
   <section>
     <h1 class="m-auto text-center text-6xl py-12">Let's Play</h1>
-    <div class="table-wrapper flex justify-center px-[1rem] py-8">
+    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-8">
       <div class="glass-table lg:flex-nowrap ">
         <Card v-for="(card, index) in displayedCards" :img="card.image"
           @card-flipped="addToCardsForReplacement(card, index)"
           @card-unflipped="removeFromCardsForReplacement(card, index)" class="shrink min-w-[100px]" />
 
-        <p class="py-4">
-          {{ currentHand }}
-        </p>
       </div>
+      <p v-if="currentHand !== ''" class="py-4">
+        Highest hand: 
+         <span class="text-2xl italic">{{ currentHand }}</span>
+        </p>
     </div>
     <p class="
     mx-auto block
@@ -131,6 +132,7 @@ export default {
     hover:shadow-black/60
     transition-all duration-200
     active:scale-95
+    py-12
   " @click="getNewDeck()">
       {{ buttonText }}
     </p>

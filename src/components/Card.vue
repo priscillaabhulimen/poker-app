@@ -48,8 +48,10 @@ export default {
 
 <style scoped>
 .card-container {
-  width: 200px;
-  height: 300px;
+  width: 16vw;
+  height: 24vw;
+  min-width: 70px;
+  min-height: 105px;
   perspective: 450px;
   cursor: pointer;
 }

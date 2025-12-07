@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <button @click="toggleRoute" class="route-toggle">
+    <!-- <button @click="toggleRoute" class="route-toggle">
       Go to {{ nextRouteName }}
-    </button>
+    </button> -->
 
     <router-view />
   </div>
