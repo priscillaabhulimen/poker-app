@@ -3,7 +3,8 @@ import Basic from "../views/Basic.vue";
 import Texas from '../views/Texas.vue';
 
 const routes = [
-  { path: '/', component: Basic, name: 'Basic'},
+  { path: "/", redirect: "/basic"},
+  { path: '/basic', component: Basic, name: 'Basic'},
   { path: '/texas', component: Texas, name: 'Texas HoldEm' }
 ];
 
