@@ -1,0 +1,94 @@
+@import url("./tailwind.css");
+
+/* Variables */
+$font-family: "Space Grotesk", sans-serif;
+$body-overlay: rgba(0, 0, 10, 0.65);
+
+$glass-bg-start: rgba(255, 255, 255, 0.08);
+$glass-bg-end: rgba(255, 255, 255, 0.03);
+$glass-blur: 6px;
+$glass-blur-webkit: 18px;
+$glass-saturate: 140%;
+$glass-radius: 12px;
+$glass-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+$glass-border: 1px solid rgba(255, 255, 255, 0.08);
+$glass-inset-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+body {
+  color: white;
+  font-family: $font-family;
+
+  background: url("/background.png") no-repeat center / cover fixed;
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: $body-overlay;
+    z-index: -1;
+  }
+}
+
+.glass-table {
+  margin: auto;
+  display: inline-flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, $glass-bg-start, $glass-bg-end);
+  backdrop-filter: blur($glass-blur) saturate($glass-saturate);
+  -webkit-backdrop-filter: blur($glass-blur-webkit) saturate($glass-saturate);
+
+  border-radius: $glass-radius;
+  box-shadow: $glass-shadow, $glass-inset-shadow;
+  border: $glass-border;
+}
+
+.btn-glass {
+  display: block;
+  margin: 0 auto;
+  width: 200px;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem; // text-md
+  color: white;
+  border-radius: 0.375rem; // rounded-md
+
+  background: linear-gradient(135deg, $glass-bg-start, $glass-bg-end);
+  backdrop-filter: blur($glass-blur) saturate($glass-saturate);
+  -webkit-backdrop-filter: blur($glass-blur-webkit) saturate($glass-saturate);
+  border: $glass-border;
+
+  box-shadow: $glass-shadow, $glass-inset-shadow;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+    &:active {
+      transform: none;
+    }
+  }
+}
+

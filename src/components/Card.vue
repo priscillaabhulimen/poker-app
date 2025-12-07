@@ -22,6 +22,10 @@ export default {
     canFlip: {
       type: Boolean,
       default: true
+    },
+    isFlipped: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -29,7 +33,6 @@ export default {
 
   data() {
     return {
-      isFlipped: false,
       backImg: "https://deckofcardsapi.com/static/img/back.png"
     };
   },
@@ -38,9 +41,7 @@ export default {
     handleClick() {
       if (!this.canFlip || !this.img) return;
 
-      this.isFlipped = !this.isFlipped;
-
-      this.$emit(this.isFlipped ? "card-flipped" : "card-unflipped");
+      this.$emit("card-flipped");
     }
   }
 };

@@ -19,54 +19,102 @@ export default {
     }
   },
   methods: {
-    addToCardsForReplacement(card, index) {
-      this.cardsToReplace.push({
-        card: card,
-        cardIndex: index,
-      })
-    },
-    removeFromCardsForReplacement(card, index) {
-      let toBeRemoved = {
-        card: card,
-        cardIndex: index,
-      };
-
-      if (this.cardsToReplace.includes(toBeRemoved)) {
-        let c = this.cardsToReplace.find((e) => e.index == toBeRemoved.index);
-        console.log(c);
+    toggleCardForReplacement(card, index) {
+      const exists = this.cardsToReplace.find(c => c.cardIndex === index);
+      if (exists) {
+        this.cardsToReplace = this.cardsToReplace.filter(c => c.cardIndex !== index);
+        this.cards[index].isFlipped = false;
+      } else {
+        this.cardsToReplace.push({ card, cardIndex: index });
+        this.cards[index].isFlipped = true;
       }
     },
+
+    async revealCardsSequentially(cards) {
+      await new Promise(resolve => setTimeout(resolve, 70));
+      for (let i = 0; i < cards.length; i++) {
+        this.cards[i].isFlipped = false;
+        await new Promise(resolve => setTimeout(resolve, 200)); // 200ms delay
+      }
+    },
+
+    async replaceSelectedCards() {
+      if (this.cardsToReplace.length === 0) return;
+
+      try {
+        this.loading = true;
+        const count = this.cardsToReplace.length;
+
+        const newCards = await this.getNewCard(count);
+
+        this.cardsToReplace.forEach((item, i) => {
+          this.cards[item.cardIndex] = newCards[i];
+          this.cards[item.cardIndex].isFlipped = false;
+        });
+
+        this.cardsToReplace = [];
+        this.loading = false;
+      } catch (err) {
+        console.error("Failed to replace cards:", err);
+        this.error = err;
+        this.loading = false;
+      }
+    },
+
+    async handleButtonClick() {
+      if(this.buttonDisabled) return;
+      if (this.cards.length === 0 || this.replaceCounter >= 2) {
+        await this.getNewDeck();
+        this.replaceCounter = 0;
+      } else {
+        await this.replaceSelectedCards();
+        this.replaceCounter++;
+      }
+    },
+
     async getNewDeck() {
       try {
         this.loading = true;
-        const deckRes = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/")
-        const deck = await deckRes.json()
+        this.deckId = '';
+        this.cards = [];
+        this.replaceCounter = 0;
+        const deckRes = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/");
+        const deck = await deckRes.json();
 
         this.deckId = deck.deck_id;
 
-        await this.getNewCard(5)
+        let c = await this.getNewCard(5);
+        if (c) {
+          c = c.map((e) => {
+            return {...e, isFlipped: true}
+          })
+          this.cards = c;
+          await this.revealCardsSequentially(c);
+        }
+
         this.loading = false;
       } catch (err) {
-        console.error("Failed to fetch cards:", err)
+        console.error("Failed to fetch cards:", err);
         this.error = err;
+        this.loading = false;
       }
     },
+
     async getNewCard(count) {
       try {
         const cardRes = await fetch(
-          `https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=${count}`,
-        )
-        const cards = await cardRes.json()
+          `https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=${count}`
+        );
+        const cardsJson = await cardRes.json();
 
-        if (this.cards.length === 0) {
-          this.cards = cards.cards;
-        } 
+        return cardsJson.cards;
 
       } catch (err) {
-        console.error("Failed to fetch cards:", err)
+        console.error("Failed to fetch cards:", err);
         this.error = err;
+        this.loading = false;
       }
-    },
+    }
   },
 
   computed: {
@@ -98,6 +146,10 @@ export default {
       }
 
       return "Get cards";
+    },
+
+    buttonDisabled() {
+      return this.cards.length > 0 && this.cardsToReplace.length === 0 && this.replaceCounter < 2;
     }
   }
 }
@@ -108,32 +160,18 @@ export default {
     <h1 class="m-auto text-center text-6xl py-12">Let's Play</h1>
     <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-8">
       <div class="glass-table lg:flex-nowrap ">
-        <Card v-for="(card, index) in displayedCards" :img="card.image"
-          @card-flipped="addToCardsForReplacement(card, index)"
-          @card-unflipped="removeFromCardsForReplacement(card, index)" class="shrink min-w-[100px]" />
+        <Card v-for="(card, index) in displayedCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
+        :canflip="this.replaceCounter >= 2"  @card-flipped="toggleCardForReplacement(card, index)" class="shrink min-w-[100px]" />
 
       </div>
       <p v-if="currentHand !== ''" class="py-4">
-        Highest hand: 
-         <span class="text-2xl italic">{{ currentHand }}</span>
-        </p>
+        Highest hand:
+        <span class="text-2xl italic">{{ currentHand }}</span>
+      </p>
     </div>
-    <p class="
-    mx-auto block
-    w-[200px] py-[12px]
-    text-white text-md text-md text-center
-    rounded-md
-    bg-white/8
-    backdrop-blur-lg backdrop-saturate-150
-    border border-white/25
-    shadow-lg shadow-black/40
-    hover:bg-white/20
-    hover:border-white/40
-    hover:shadow-black/60
-    transition-all duration-200
-    active:scale-95
-    py-12
-  " @click="getNewDeck()">
+    <p class="btn-glass" 
+    :class="{disabled: buttonDisabled}"
+    @click="handleButtonClick()">
       {{ buttonText }}
     </p>
   </section>
