@@ -17,6 +17,7 @@ $glass-inset-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 body {
   color: white;
   font-family: $font-family;
+  min-height: 100%;
 
   background: url("/background.png") no-repeat center / cover fixed;
 
