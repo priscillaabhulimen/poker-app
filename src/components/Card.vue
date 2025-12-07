@@ -1,10 +1,10 @@
 <template>
   <div
     class="card-container"
-    :class="{ flipped: isFlipped }"
+    :class="{ flipped: isFlipped, empty: !this.img}"
     @click="handleClick"
   >
-    <div class="card">
+    <div v-if="this.img" class="card">
       <img
         class="card-face card-front"
         :src="img"
@@ -17,6 +17,10 @@
         alt="Card back"
       />
     </div>
+
+    
+      <p>?</p>
+    
   </div>
 </template>
 
@@ -27,7 +31,7 @@ export default {
   props: {
     img: {
       type: String,
-      required: true
+      default: ""
     },
     canFlip: {
       type: Boolean,
@@ -46,7 +50,7 @@ export default {
 
   methods: {
     handleClick() {
-      if (!this.canFlip) return;
+      if (!this.canFlip || !this.img) return;
 
       this.isFlipped = !this.isFlipped;
 
@@ -60,8 +64,35 @@ export default {
 .card-container {
   width: 120px;
   height: 180px;
-  perspective: 1000px;
+  perspective: 300px;
   cursor: pointer;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.empty > p{
+  font-size: 2em;
+  font-weight: 700;
+  color: white;
 }
 
 .card {
@@ -69,7 +100,7 @@ export default {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.5s ease;
+  transition: transform 1.8s ease;
 }
 
 .card-container.flipped .card {
