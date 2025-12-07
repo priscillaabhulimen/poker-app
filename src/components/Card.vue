@@ -1,5 +1,5 @@
 <template>
-  <div class="card-container shrink-2 w-[80px] lg:w-[200px] lg:min-w-[100px]" :class="{ flipped: isFlipped, empty: !this.img }"
+  <div class="shrink-2" :class="{ flipped: isFlipped, empty: !this.img, small: size === 'sm', large: size === 'lg', medium: size === 'md' }"
     @click="handleClick">
     <div v-if="img" class="card">
       <img class="card-face card-front" :src="img" alt="Card front" />
@@ -26,6 +26,10 @@ export default {
     isFlipped: {
       type: Boolean,
       default: false
+    },
+    size: {
+      type: String,
+      default: 'lg'
     }
   },
 
@@ -40,21 +44,56 @@ export default {
   methods: {
     handleClick() {
       if (!this.canFlip || !this.img) return;
-
       this.$emit("card-flipped");
     }
   }
 };
 </script>
 
-<style scoped>
-.card-container {
+<style lang="scss" scoped>
+.large {
   width: 16vw;
   height: 24vw;
   min-width: 70px;
   min-height: 105px;
   perspective: 450px;
   cursor: pointer;
+
+  &.flipped{
+    .card{
+      transform: rotateY(180deg);
+    }
+  }
+}
+
+.medium {
+  width: 10vw;
+  height: 15vw;
+  min-width: 70px;
+  min-height: 105px;
+  perspective: 450px;
+  cursor: pointer;
+
+  &.flipped{
+    .card{
+      transform: rotateY(180deg);
+    }
+  }
+}
+
+.small {
+  width: 8vw;
+  height: 12vw;
+  min-width: 70px;
+  min-height: 105px;
+  perspective: 450px;
+  cursor: pointer;
+
+  &.flipped{
+    .card{
+      transform: rotateY(180deg);
+    }
+  }
 }
 
 .empty {
@@ -74,11 +113,11 @@ export default {
     0 12px 30px rgba(0, 0, 0, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
-}
 
-.empty>p {
-  font-size: 2em;
-  font-weight: 700;
+  p {
+    font-size: 2em;
+    font-weight: 700;
+  }
 }
 
 .card {
@@ -86,11 +125,7 @@ export default {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 1.3s ease;
-}
-
-.card-container.flipped .card {
-  transform: rotateY(180deg);
+  transition: transform 0.8s ease;
 }
 
 .card-face {

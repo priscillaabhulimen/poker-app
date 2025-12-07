@@ -14,7 +14,7 @@ export default {
       error: '',
       cards: [],
       deckId: '',
-      replaceCounter: 0,
+      replacementsLeft: 2,
       cardsToReplace: [],
     }
   },
@@ -62,13 +62,13 @@ export default {
     },
 
     async handleButtonClick() {
-      if(this.buttonDisabled) return;
-      if (this.cards.length === 0 || this.replaceCounter >= 2) {
+      if (this.buttonDisabled) return;
+      if (this.cards.length === 0 || this.replacementsLeft <= 0) {
+        this.replacementsLeft = 2;
         await this.getNewDeck();
-        this.replaceCounter = 0;
       } else {
         await this.replaceSelectedCards();
-        this.replaceCounter++;
+        this.replacementsLeft--;
       }
     },
 
@@ -77,7 +77,6 @@ export default {
         this.loading = true;
         this.deckId = '';
         this.cards = [];
-        this.replaceCounter = 0;
         const deckRes = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/");
         const deck = await deckRes.json();
 
@@ -86,7 +85,7 @@ export default {
         let c = await this.getNewCard(5);
         if (c) {
           c = c.map((e) => {
-            return {...e, isFlipped: true}
+            return { ...e, isFlipped: true }
           })
           this.cards = c;
           await this.revealCardsSequentially(c);
@@ -114,7 +113,7 @@ export default {
         this.error = err;
         this.loading = false;
       }
-    }
+    },
   },
 
   computed: {
@@ -125,7 +124,7 @@ export default {
 
       return this.cards.map(card => ({
         ...card,
-        isPlaceholder: false
+        isPlaceholder: false,
       }))
 
     },
@@ -141,15 +140,19 @@ export default {
     },
 
     buttonText() {
-      if (this.cards.length > 0 && this.replaceCounter < 2) {
-        return "Replace cards"
+      if (this.cards.length > 0 && this.replacementsLeft > 0) {
+        return "Redraw cards"
       }
 
-      return "Get cards";
+      return "Draw cards";
     },
 
     buttonDisabled() {
-      return this.cards.length > 0 && this.cardsToReplace.length === 0 && this.replaceCounter < 2;
+      return this.cards.length > 0 && this.cardsToReplace.length === 0 && this.replacementsLeft > 0;
+    },
+
+    canFlip(card) {
+      return this.replacementsLeft > 0;
     }
   }
 }
@@ -157,21 +160,22 @@ export default {
 
 <template>
   <section>
-    <h1 class="m-auto text-center text-6xl py-12">Let's Play</h1>
-    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-8">
-      <div class="glass-table lg:flex-nowrap ">
-        <Card v-for="(card, index) in displayedCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
-        :canflip="this.replaceCounter >= 2"  @card-flipped="toggleCardForReplacement(card, index)" class="shrink min-w-[100px]" />
-
-      </div>
-      <p v-if="currentHand !== ''" class="py-4">
+    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] pt-8 pb-2">
+      <p v-if="currentHand !== ''" class="pb-6">
         Highest hand:
         <span class="text-2xl italic">{{ currentHand }}</span>
       </p>
+      <div class="glass-table lg:flex-nowrap ">
+        <Card v-for="(card, index) in displayedCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
+          :canFlip="canFlip" @card-flipped="toggleCardForReplacement(card, index)" />
+
+      </div>
+
+      <p v-if="cards.length > 0" class="m-auto pt-8"> You have <span class="text-2xl">{{ replacementsLeft }}</span> redraws left</p>
+        <div v-else class="pb-8"></div>
     </div>
-    <p class="btn-glass" 
-    :class="{disabled: buttonDisabled}"
-    @click="handleButtonClick()">
+
+    <p class="btn-glass" :class="{ disabled: buttonDisabled }" @click="handleButtonClick()">
       {{ buttonText }}
     </p>
   </section>
