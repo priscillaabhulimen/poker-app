@@ -165,7 +165,7 @@ export default {
         Highest hand:
         <span class="text-2xl italic">{{ currentHand }}</span>
       </p>
-      <div class="glass-table lg:flex-nowrap ">
+      <div class="glass table lg:flex-nowrap ">
         <Card v-for="(card, index) in displayedCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
           :canFlip="canFlip" @card-flipped="toggleCardForReplacement(card, index)" />
 

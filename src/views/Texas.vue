@@ -178,20 +178,23 @@ export default {
 
 <template>
     <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-4">
-        <p class="pb-3 align-middle" :class="{invisible: currentHand === ''}">
+        <p class="pb-3 align-middle" :class="{ invisible: currentHand === '' }">
             Highest hand:
             <span class="text-2xl italic">{{ currentHand }}</span>
         </p>
-        <div class="glass-table lg:flex-nowrap ">
-            <Card v-for="card in displayedCommunityCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
-                :size="card.size" :canFlip="false" />
-
+        <div class="glass lg:flex-nowrap ">
+            <div class="table">
+                <Card v-for="card in displayedCommunityCards" :img="card.image"
+                    :isFlipped="card.isFlipped || !card.image" :size="card.size" :canFlip="false" />
+            </div>
+            <p class="text-center">Community</p>
         </div>
-        <div class="spacer h-4"></div>
-        <div class="glass-table mt-10 lg:flex-nowrap ">
-            <Card v-for="card in displayedPrivateCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
-                :size="card.size" :canFlip="false" />
-
+        <div class="glass mt-10">
+            <div class="table">
+                <Card v-for="card in displayedPrivateCards" :img="card.image" :isFlipped="card.isFlipped || !card.image"
+                    :size="card.size" :canFlip="false" />
+            </div>
+            <p class="text-center">Your Hand</p>
         </div>
     </div>
     <p class="btn-glass" @click="handleButtonClick()">

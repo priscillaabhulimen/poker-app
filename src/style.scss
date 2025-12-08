@@ -31,6 +31,7 @@ body {
 body {
   color: white;
   font-family: $font-family;
+  padding-bottom: 20px;
 
   background: url("/background.png") no-repeat center / cover fixed;
 
@@ -43,16 +44,8 @@ body {
   }
 }
 
-.glass-table {
-  margin: auto;
-  display: inline-flex;
-  flex-flow: row wrap;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
-
-  justify-content: center;
-  align-items: center;
-
+.glass {
+  padding-bottom: 1rem;
   background: linear-gradient(135deg, $glass-bg-start, $glass-bg-end);
   backdrop-filter: blur($glass-blur) saturate($glass-saturate);
   -webkit-backdrop-filter: blur($glass-blur-webkit) saturate($glass-saturate);
@@ -60,6 +53,20 @@ body {
   border-radius: $glass-radius;
   box-shadow: $glass-shadow, $glass-inset-shadow;
   border: $glass-border;
+}
+
+.table {
+  margin: auto;
+  display: inline-flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-glass {
