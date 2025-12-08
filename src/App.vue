@@ -28,7 +28,7 @@ export default {
 <template>
   <div id="app">
     <h1 class="m-auto text-center text-5xl pt-8">{{ pageName }}</h1>
-    <button class="floating-button" @click="toggleRoute()">
+    <button class="floating-button" @click="toggleRoute">
       <span class="icon">♠️</span>
       <span class="label">{{ toggleLabel }}</span>
     </button>

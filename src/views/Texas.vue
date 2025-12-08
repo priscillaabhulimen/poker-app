@@ -197,7 +197,7 @@ export default {
             <p class="text-center">Your Hand</p>
         </div>
     </div>
-    <p class="btn-glass" @click="handleButtonClick()">
+    <p class="btn-glass" @click="handleButtonClick">
         {{ buttonText }}
     </p>
 </template>

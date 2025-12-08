@@ -140,8 +140,10 @@ export default {
     },
 
     buttonText() {
-      if (this.cards.length > 0 && this.replacementsLeft > 0) {
-        return "Redraw cards"
+      if (this.cards.length > 0) {
+        if(this.replacementsLeft > 0) return "Redraw cards";
+
+        return "Draw new cards";
       }
 
       return "Draw cards";
@@ -180,7 +182,7 @@ export default {
 
     </div>
 
-    <p class="btn-glass" :class="{ disabled: buttonDisabled }" @click="handleButtonClick()">
+    <p class="btn-glass" :class="{ disabled: buttonDisabled }" @click="handleButtonClick">
       {{ buttonText }}
     </p>
   </section>
