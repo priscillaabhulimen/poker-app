@@ -27,7 +27,7 @@ export default {
 
 <template>
   <div id="app">
-    <h1 class="m-auto text-center text-5xl pt-8">{{ pageName }}</h1>
+    <h1 class="mx-auto text-center text-5xl my-8">{{ pageName }}</h1>
     <button class="floating-button" @click="toggleRoute">
       <span class="icon">♠️</span>
       <span class="label">{{ toggleLabel }}</span>
@@ -37,6 +37,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@import url('styles/style.scss');
 .floating-button {
   position: fixed;
   top: 1.25rem;
@@ -48,7 +49,7 @@ export default {
   gap: 0.6rem;
 
   height: 48px;
-  padding: 0 14px;
+  padding: 0 12px;
   max-width: 48px;
 
   background: rgba(255, 255, 255, 0.08);
@@ -74,7 +75,7 @@ export default {
 
   &:hover,
   &:focus-visible {
-    max-width: 220px;
+    max-width: 250px;
     background: rgba(255, 255, 255, 0.18);
   }
 
@@ -99,6 +100,13 @@ export default {
   &:focus-visible .label {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .floating-button {
+    top: auto;
+    bottom: 1.25rem;
   }
 }
 </style>

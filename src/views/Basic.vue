@@ -162,7 +162,7 @@ export default {
 
 <template>
   <section>
-    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] pt-8 pb-2">
+    <div class="flex flex-col justify-center items-center px-[1rem] pt-8 pb-2">
       <p :class="{ invisible: currentHand === '' }" class="pb-6">
         Highest hand:
         <span class="text-2xl italic">{{ currentHand }}</span>

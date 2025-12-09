@@ -77,13 +77,13 @@ export default {
   }
 
   &.size-md {
-    width: 10vw;
-    height: 15vw;
+    width: 8vw;
+    height: 12vw;
   }
 
   &.size-sm {
-    width: 8vw;
-    height: 12vw;
+    width: 6vw;
+    height: 9vw;
   }
 }
 

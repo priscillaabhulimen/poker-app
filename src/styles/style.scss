@@ -1,0 +1,61 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+@import url("./tailwind.css");
+
+/* Reset */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+#app {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  color: white;
+  font-family: $font-family;
+  padding-bottom: 2vh;
+
+  background: url("/background.png") no-repeat center / cover fixed;
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: $body-overlay;
+    z-index: -1;
+  }
+}
+
+/* Components */
+.glass {
+  padding-bottom: 1rem;
+  @include glass-elevated;
+}
+
+.table {
+  @include flex-table;
+  padding: 1.5rem 2rem 1rem;
+}
+
+.btn-glass {
+  display: block;
+  margin: 0 auto;
+  width: 200px;
+  padding: 12px;
+
+  text-align: center;
+  font-size: 1rem;
+  color: white;
+  border-radius: 0.375rem;
+
+  @include glass-elevated;
+  @include glass-button-interactions;
+}

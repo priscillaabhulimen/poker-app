@@ -1,0 +1,56 @@
+@use "./variables" as *;
+
+@mixin glass-base {
+  background: linear-gradient(135deg, $glass-bg-start, $glass-bg-end);
+  backdrop-filter: blur($glass-blur) saturate($glass-saturate);
+  -webkit-backdrop-filter: blur($glass-blur-webkit) saturate($glass-saturate);
+  border: $glass-border;
+}
+
+@mixin glass-elevated {
+  @include glass-base;
+  border-radius: $glass-radius;
+  box-shadow: $glass-shadow, $glass-inset-shadow;
+}
+
+@mixin glass-button-interactions {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0 12px 30px rgba(0, 0, 0, 0.6),
+      $glass-inset-shadow;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.4),
+        $glass-inset-shadow;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+@mixin flex-table {
+  margin: auto;
+  display: inline-flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}

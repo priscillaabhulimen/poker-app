@@ -75,8 +75,10 @@ export default {
         },
 
         buttonText() {
-            if (this.cards.length === 0 || this.communityCards.length === 5) {
+            if (this.cards.length === 0 && !this.loading) {
                 return "Deal cards";
+            } else if(this.communityCards.length === 5){
+                return "Deal new cards";
             } else if (this.communityCards.length === 0) {
                 return "Deal flop";
             } else if (this.communityCards.length === 3) {
@@ -177,7 +179,7 @@ export default {
 </script>
 
 <template>
-    <div class="table-wrapper flex flex-col justify-center items-center px-[1rem] py-4">
+    <div class="flex flex-col justify-center items-center px-[1rem] pb-4">
         <p class="pb-3 align-middle" :class="{ invisible: currentHand === '' }">
             Highest hand:
             <span class="text-2xl italic">{{ currentHand }}</span>

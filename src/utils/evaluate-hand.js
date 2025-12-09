@@ -33,7 +33,7 @@ const VALUE_NAME = {
 
 const HAND_RANKS = [
   "High Card",
-  "One Pair",
+  "Two of a Kind",
   "Two Pair",
   "Three of a Kind",
   "Straight",
@@ -91,7 +91,7 @@ function evaluateFiveCardHand(cards) {
   } else if (counts[0] === 2 && counts[1] === 2) {
     handName = "Two Pair";
   } else if (counts[0] === 2) {
-    handName = "One Pair";
+    handName = "Two of a Kind";
   }
 
   if (handName === "High Card") {
