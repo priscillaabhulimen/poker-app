@@ -28,7 +28,7 @@ export default {
 <template>
   <div id="app">
     <h1 class="mx-auto text-center text-5xl my-8">{{ pageName }}</h1>
-    <button class="floating-button" @click="toggleRoute">
+    <button class="btn-glass floating-button" @click="toggleRoute">
       <span class="icon">♠️</span>
       <span class="label">{{ toggleLabel }}</span>
     </button>
@@ -37,8 +37,11 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import url('styles/style.scss');
+@use './styles/mixins' as *;
+
 .floating-button {
+  @include glass-elevated;
+  
   position: fixed;
   top: 1.25rem;
   right: 1.2rem;
@@ -52,11 +55,6 @@ export default {
   padding: 0 12px;
   max-width: 48px;
 
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
-
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -64,11 +62,7 @@ export default {
   overflow: hidden;
   white-space: nowrap;
 
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-
-  transition:
+  transition: 
     max-width 0.35s ease,
     background-color 0.25s ease,
     box-shadow 0.25s ease;

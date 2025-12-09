@@ -3,7 +3,6 @@
 
 @import url("./tailwind.css");
 
-/* Reset */
 html,
 body {
   margin: 0;
@@ -34,7 +33,6 @@ body {
   }
 }
 
-/* Components */
 .glass {
   padding-bottom: 1rem;
   @include glass-elevated;
@@ -55,6 +53,7 @@ body {
   font-size: 1rem;
   color: white;
   border-radius: 0.375rem;
+  cursor: pointer;
 
   @include glass-elevated;
   @include glass-button-interactions;
